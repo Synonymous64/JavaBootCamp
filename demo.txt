@@ -1,0 +1,2 @@
+This is an demo file for testing purpose file handling in Java
+Hope this works ;)

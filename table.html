@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    table,
+    th {
+      border: 1px solid black;
+      border-collapse: collapse;
+      background-color: darkolivegreen;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input[type="text"],
+    input[type="username"],
+    input[type="password"] {
+      width: 100%;
+      padding: 20px;
+      margin: 5px 0 22px 0;
+      display: inline-block;
+      border: none;
+      background: rgb(202, 199, 199);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      background-color: rgb(221, 214, 214);
+      outline: none;
+    }
+
+    button {
+      background-color: green;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      opacity: 0.9;
+    }
+
+    .cancelbtn {
+      padding: 14px 20px;
+      background-color: red;
+    }
+
+    .cancelbtn,
+    .signupbtn {
+      float: left;
+      width: 50%;
+    }
+
+    .container {
+      padding: 16px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(97, 97, 131);
+      padding-top: 50px;
+    }
+
+    .modal-content {
+      background-color: rgb(221, 212, 212);
+      margin: 5% auto 15% auto;
+      border: 1px solid rgb(151, 149, 149);
+      width: 80%;
+    }
+
+    hr {
+      border: 1px solid rgb(211, 201, 201);
+      margin-bottom: 25px;
+    }
+
+    .close {
+      position: absolute;
+      right: 35px;
+      top: 15px;
+      font-size: 40px;
+      font-weight: bold;
+      color: rgb(175, 166, 166);
+    }
+
+    .close:hover,
+    .close:focus {
+      color: rgb(241, 55, 55);
+      cursor: pointer;
+    }
+
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    @media screen and (max-width: 300px) {
+
+      .cancelbtn,
+      .signupbtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<div>
+  <h2>Signup Form</h2>
+
+  <button onclick="document.getElementById('id').style.display='block'" style="width: auto">
+    Sign Up
+  </button>
+  <div class="container">
+    <h2>user table</h2>
+    <div id ="user"></div>
+
+
+  </div>
+</div>
+
+
+
+
+  <div id="id" class="modal">
+    <span onclick="document.getElementById('id').style.display='none'" class="close" title="Close Modal">&times;</span>
+    <form onSubmit="submitForm()">
+      <div class="container">
+        <h1>Sign Up</h1>
+        <p>Fill the form to create account.</p>
+        <hr />
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" id="email" required />
+
+        <label for="username"><b>Username</b></label>
+        <input type="username" placeholder="Enter Username" name="username" id="username" required />
+
+        <form>
+          <p><b>Gender</b></p>
+
+            <input type="radio" id="male" name="gender" value="Male" />  
+          <label for="male">Male</label><br />
+            <input type="radio" id="female" name="gender" value="Female" />  
+          <label for="female">Female</label><br />
+        </form>
+
+        <label for="password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" id="password" name="password" required />
+
+        <label for="Confirm-password"><b>Confirm Password</b></label>
+        <input type="password" placeholder="Confirm Password" id="confirm_password" name="confirm_password" required />
+
+        <div class="clearfix">
+          <button type="button" onclick="document.getElementById('id').style.display='none'" class="cancelbtn">
+            Cancel
+          </button>
+          <button type="submit" class="signupbtn">Sign Up</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    showData();
+    function submitForm(e) {
+      let email = document.getElementById("email").value;
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      let confirm_password =
+        document.getElementById("confirm_password").value;
+      let gender;
+      let usersFromStorage = JSON.parse(localStorage.getItem("users")) || []; //get stored users from localstorage
+
+      if (document.getElementById("male").checked) {
+        gender = "Male";
+      } else if (document.getElementById("female").checked) {
+        gender = "Female";
+      }
+
+      //form validations
+      if (password == "") return alert("enter password");
+      else if (confirm_password == "")
+        return alert("Please enetr confirm password");
+      else if (password != confirm_password)
+        return alert("Password did not match: Please try again");
+
+      let userObj = { email, username, password, confirm_password, gender }; //create object of input values
+      usersFromStorage.push(userObj); //push in array
+      localStorage.setItem("users", JSON.stringify(usersFromStorage)); //store array in localstorage
+
+      var modal = document.getElementById("id");
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    }
+    function showData() {
+      document.getElementById("user").innerHTML = "";
+      let userObj = new Array();
+      userObj = JSON.parse(localStorage.getItem("users")) || [];
+      if (userObj) {
+        for (let i = 0; i < userObj.length; i++) {
+          let addDiv = document.createElement("div");
+          addDiv.className = "row";
+          addDiv.innerHTML = 
+          addDiv.innerHTML =
+            '<table border = 1 width = 60%><tr align ="center"><th align = "center">Email</th><th align = "center">username</th><th align ="center">gender</th></tr><tr><td align="center"><div class="showUser" style="padding: 10px;" align="center">' +
+            userObj[i].email +
+            '</div></td><td align = "center"><div class="showUser" style="padding: 10px;" align="center">' +
+            userObj[i].username +
+            '</div></td><td align = "center"><div class="showUser" style="padding: 10px;" align ="center">' +
+            userObj[i].gender +
+            "</div></td><tr></table>";
+          document.getElementById("user").appendChild(addDiv);
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

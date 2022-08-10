@@ -1,0 +1,22 @@
+A thread is a path of execution in a program that goes through the following states of a thread. The five states are as follows:
+
+New
+Runnable
+Running
+Blocked (Non-runnable state)
+-----------------------------------------------------------------------------------------------------
+New (Newborn State)-->
+When an instance of the Thread class is created a new thread is born and is known to be in New-born state. That is, when a thread is born, it enters into new state but its execution phase has not been started yet on the instance.
+-----------------------------------------------------------------------------------------------------
+Runnable State -->
+The second phase of a new-born thread is the execution phase. When the start() method is called on a the new instance of a thread, it enters into a runnable state.
+In the runnable state, thread is ready for execution and is waiting for availability of the processor (CPU time). There are many threads that are ready for execution, they all are waiting in a queue (line).
+------------------------------------------------------------------------------------------------------
+Running State -->
+Running means Processor (CPU) has allocated time slot to thread for its execution. When thread scheduler selects a thread from the runnable state for execution, it goes into running state. Look at the above figure.
+------------------------------------------------------------------------------------------------------
+Blocked State -->
+A thread is considered to be in the blocked state when it is suspended, sleeping, or waiting for some time in order to satisfy some condition.
+------------------------------------------------------------------------------------------------------
+Dead State(Terminated) -->
+A thread dies or moves into dead state automatically when its run() method completes the execution of statements. That is, a thread is terminated or dead when a thread comes out of run() method. A thread can also be dead when the stop() method is called.

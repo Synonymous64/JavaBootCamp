@@ -1,0 +1,345 @@
+I am going through a socket program. In it, printStackTrace is called on the IOException object in the catch block.
+What does printStackTrace() actually do?
+
+catch(IOException ioe)
+{
+    ioe.printStackTrace();
+}
+I am unaware of its purpose. What is it used for?
+
+java
+exception-handling
+printstacktrace
+Share
+Improve this question
+Follow
+edited Jun 2, 2015 at 3:35
+user avatar
+Nathan Tuggy
+2,2302727 gold badges2929 silver badges3838 bronze badges
+asked Apr 1, 2010 at 12:46
+user avatar
+Venkat
+19.9k2626 gold badges7272 silver badges8383 bronze badges
+51
+One of the most powerful features in modern IDE's is the ability to look up documentation (called javadoc) for a given Java method. In Eclipse it is Shift-F2 when the cursor is placed on the printStackTrace method name. – 
+Thorbjørn Ravn Andersen
+ Apr 1, 2010 at 13:36
+2
+Sounds like you're new to Java. Here's something to read: today.java.net/article/2006/04/04/… – 
+TJR
+ Apr 1, 2010 at 17:48
+You can also read the code of the printStackTrace() to see exactly what it does and how it does it. – 
+Peter Lawrey
+ Nov 18, 2010 at 10:59
+1
+I often see this pattern inside catch blocks: e.printStackTrace(); System.exit(1);  Here I want to ask the same question as the OP, but in a different vein: What exactly is the purpose of this? Won't the JRE automatically print the stacktrace and exit, when the exception is thrown? I.e., there isn't really very much "Exception Handling" going on here, right?? – 
+Owen
+ Mar 16, 2017 at 22:15
+1
+It's also generally a very bad idea, as it suppresses the exception - unfortunately it's what Eclipse and other IDEs often auto-suggest as the body for the catch block, so it's used far more often than it should be. – 
+dimo414
+ Apr 13, 2017 at 1:17
+Show 3 more comments
+9 Answers
+Sorted by:
+
+Highest score (default)
+
+105
+
+It's a method on Exception instances that prints the stack trace of the instance to System.err.
+
+It's a very simple, but very useful tool for diagnosing an exceptions. It tells you what happened and where in the code this happened.
+
+Here's an example of how it might be used in practice:
+
+try {
+    // ...
+} catch (SomeException e) { 
+    e.printStackTrace();
+}
+Note that in "serious production code" you usually don't want to do this, for various reasons (such as System.out being less useful and not thread safe). In those cases you usually use some log framework that provides the same (or very similar) output using a command like log.error("Error during frobnication", e);.
+
+Share
+Improve this answer
+Follow
+edited Oct 12, 2021 at 9:23
+answered Apr 1, 2010 at 12:47
+user avatar
+Joachim Sauer
+292k5555 gold badges540540 silver badges600600 bronze badges
+2
+And thanks to checked exceptions it's probably the #1 content of catch blocks :-) – 
+Joey
+ Apr 3, 2010 at 7:57
+3
+@Joey Or throw new RuntimeException(e) – 
+Bart van Heukelom
+ Jul 19, 2011 at 8:16
+4
+however it is considered bad practice as it is not threadsafe. Use the logger statement and include it there. – 
+Karidrgn
+ Mar 16, 2018 at 20:52 
+Add a comment
+
+46
+
+I was kind of curious about this too, so I just put together a little sample code where you can see what it is doing:
+
+try {
+    throw new NullPointerException();
+}
+catch (NullPointerException e) {
+    System.out.println(e);
+}
+
+try {
+    throw new IOException();
+}
+catch (IOException e) {
+    e.printStackTrace();
+}
+System.exit(0);
+Calling println(e):
+
+java.lang.NullPointerException
+
+Calling e.printStackTrace():
+
+java.io.IOException
+      at package.Test.main(Test.java:74)
+Share
+Improve this answer
+Follow
+edited Feb 22, 2018 at 13:31
+user avatar
+Neuron - Freedom for Ukraine
+4,30344 gold badges2929 silver badges5151 bronze badges
+answered Feb 14, 2014 at 19:43
+user avatar
+Jens Bodal
+1,53011 gold badge1818 silver badges3131 bronze badges
+This is normal, with the 1st one you call the toString() of the error, and in the 2nd you ask to print all the stackTrace from the error. That's 2 différents things. – 
+Jon
+ May 17, 2016 at 8:08
+2
+System.err.println(e); will be more appropriate. – 
+roottraveller
+ Sep 11, 2017 at 5:18
+Add a comment
+
+14
+
+It helps to trace the exception. For example you are writing some methods in your program and one of your methods causes bug. Then printstack will help you to identify which method causes the bug. Stack will help like this:
+
+First your main method will be called and inserted to stack, then the second method will be called and inserted to the stack in LIFO order and if any error occurs somewhere inside any method then this stack will help to identify that method.
+
+Share
+Improve this answer
+Follow
+edited Apr 23, 2012 at 12:53
+user avatar
+Matthias
+7,31266 gold badges5555 silver badges8686 bronze badges
+answered Apr 23, 2012 at 11:24
+user avatar
+yogesh pathak
+14111 silver badge22 bronze badges
+Add a comment
+
+11
+
+printStackTrace() helps the programmer to understand where the actual problem occurred. printStacktrace() is a method of the class Throwable of java.lang package. It prints several lines in the output console. The first line consists of several strings. It contains the name of the Throwable sub-class & the package information. From second line onwards, it describes the error position/line number beginning with at.
+
+The last line always describes the destination affected by the error/exception. The second last line informs us about the next line in the stack where the control goes after getting transfer from the line number described in the last line. The errors/exceptions represents the output in the form a stack, which were fed into the stack by fillInStackTrace() method of Throwable class, which itself fills in the program control transfer details into the execution stack. The lines starting with at, are nothing but the values of the execution stack. In this way the programmer can understand where in code the actual problem is.
+
+Along with the printStackTrace() method, it's a good idea to use e.getmessage().
+
+Share
+Improve this answer
+Follow
+edited Feb 22, 2018 at 14:25
+user avatar
+Lorenzo Canavaggio
+30122 silver badges1313 bronze badges
+answered Aug 1, 2015 at 16:42
+user avatar
+Ashish Gope
+31011 gold badge44 silver badges1212 bronze badges
+Add a comment
+
+6
+
+printStackTrace() prints the locations where the exception occurred in the source code, thus allowing the author who wrote the program to see what went wrong. But since it shows problems in the source code, the user(s) who may or may not have any coding experience may not be able to understand what went wrong, so if the program allows the user to send error messages to the authors, the users may not be able to give good data on what went wrong.
+
+You should consider the Logger.getLogger() method, it offers a better exception handling (logging) facility, and besides printStackTrace() without arguments is considered to be obsolete and should ONLY be used for debugging purposes, not for user display.
+
+Share
+Improve this answer
+Follow
+edited Feb 22, 2018 at 14:24
+user avatar
+Lorenzo Canavaggio
+30122 silver badges1313 bronze badges
+answered May 28, 2015 at 3:10
+user avatar
+TheArchon
+30333 silver badges1515 bronze badges
+Add a comment
+
+2
+
+The printStackTrace() helps the programmer understand where the actual problem occurred. The printStackTrace() method is a member of the class Throwable in the java.lang package.
+
+Share
+Improve this answer
+Follow
+edited Jun 30, 2017 at 18:47
+user avatar
+JNYRanger
+6,6161212 gold badges5555 silver badges7777 bronze badges
+answered Jun 30, 2017 at 18:25
+user avatar
+Rasmi Ranja Choudhury
+2111 bronze badge
+Add a comment
+
+2
+
+printStackTrace is a method of the Throwable class. This method displays error message in the console; where we are getting the exception in the source code. These methods can be used with catch block and they describe:
+
+Name of the exception.
+Description of the exception.
+Location of the exception in the source code.
+The three methods which describe the exception on the console (in which printStackTrace is one of them) are:
+
+printStackTrace()
+toString()
+getMessage()
+Example:
+
+public class BabluGope {
+    public static void main(String[] args) {
+        try {
+            System.out.println(10/0);
+         } catch (ArithmeticException e) {
+             e.printStackTrace();   
+             // System.err.println(e.toString());
+             //System.err.println(e.getMessage());  
+         }
+    }
+}
+Share
+Improve this answer
+Follow
+edited Aug 21, 2018 at 10:55
+user avatar
+Shakthi Arul
+1177 bronze badges
+answered Jul 12, 2017 at 20:47
+user avatar
+Bablu Mgc
+2122 bronze badges
+Add a comment
+
+1
+
+printStackTrace() helps the programmer to understand where the actual problem occurred. It helps to trace the exception. it is printStackTrace() method of Throwable class inherited by every exception class. This method prints the same message of e object and also the line number where the exception occurred.
+
+The following is an another example of print stack of the Exception in Java.
+
+public class Demo {
+   public static void main(String[] args) {
+      try {
+         ExceptionFunc();
+      } catch(Throwable e) {
+         e.printStackTrace();
+      }
+   }
+   public static void ExceptionFunc() throws Throwable {
+      Throwable t = new Throwable("This is new Exception in Java...");
+
+      StackTraceElement[] trace = new StackTraceElement[] {
+         new StackTraceElement("ClassName","methodName","fileName",5)
+      };
+      t.setStackTrace(trace);
+      throw t;
+   }
+}
+java.lang.Throwable: This is new Exception in Java... at ClassName.methodName(fileName:5)
+
+Share
+Improve this answer
+Follow
+answered Oct 25, 2018 at 14:29
+user avatar
+RohanMNirer
+1122 bronze badges
+Add a comment
+
+0
+
+What is the use of e.printStackTrace() method in Java?
+
+Well, the purpose of using this method e.printStackTrace(); is to see what exactly wrong is.
+
+For example, we want to handle an exception. Let's have a look at the following Example.
+
+public class Main{
+
+  public static void main(String[] args) {
+
+    int a = 12;
+    int b = 2;
+
+    try {
+       int result = a / (b - 2);
+       System.out.println(result);
+    }
+
+    catch (Exception e)
+    {
+       System.out.println("Error: " + e.getMessage());
+       e.printStackTrace();
+    }
+  }
+}
+I've used method e.printStackTrace(); in order to show exactly what is wrong.
+
+In the output, we can see the following result.
+
+Error: / by zero
+
+java.lang.ArithmeticException: / by zero
+
+  at Main.main(Main.java:10)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+  at java.lang.reflect.Method.invoke(Method.java:498)
+  at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+Share
+Improve this answer
+Follow
+edited Feb 26, 2017 at 0:34
+user avatar
+Stephen Rauch♦
+44.6k3030 gold badges102102 silver badges125125 bronze badges
+answered Feb 26, 2017 at 0:16
+user5245248
+Add a comment
+Your Answer
+Sign up or log in
+ Sign up using Google
+ Sign up using Facebook
+ Sign up using Email and Password
+Post as a guest
+Name
+Email
+Required, but never shown
+
+Post Your Answer
+By clicking “Post Your Answer”, you agree to our terms of service, privacy policy and cookie policy
+
+Not the answer you're looking for? Browse other questions tagged java exception-handling printstacktrace or ask your own question.
