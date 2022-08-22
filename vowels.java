@@ -2,11 +2,11 @@ import java.util.*;
 public class vowels {
 
     public void findVowels(String s){
-        int[] arr = new int[26];
+        int[] arr = new int[256];
         for(char ch : s.toCharArray()){
-            arr[ch - 'a']++;
+            arr[ch - '0']++;
         }
-        System.out.println("The value of Vowels are as follows\na = " + arr['a' - 'a'] + "\ne = " + arr['e' - 'a'] + "\ni = " + arr['i' - 'a'] + "\no = " + arr['o' - 'a'] + "\nu = " + arr['u' - 'a']);
+        System.out.println("The value of Vowels are as follows\na = " + arr['a' - '0'] + "\ne = " + arr['e' - '0'] + "\ni = " + arr['i' - '0'] + "\no = " + arr['o' - '0'] + "\nu = " + arr['u' - '0']);
     }
     public static void main(String[] args) {
         vowels v = new vowels();
