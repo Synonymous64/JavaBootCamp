@@ -1,14 +1,13 @@
 class Sample{
-    //* Default Contructor */ 
+    //* Parameterized Contructor */ 
     public int a , b;
-    Sample(){
-        System.out.println("Default constructor is called");
-        a = b = 10;
+    Sample(int a, int b){
+        System.out.println("Parameterized constructor is called");
         System.out.println("added a + b = " + (a + b));
     }
 }
 public class Constructors {
     public static void main(String[] args) {
-        Sample s = new Sample();
+        Sample s = new Sample(10, 10);
     }
 }
