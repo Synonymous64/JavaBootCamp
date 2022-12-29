@@ -32,7 +32,7 @@ public class javaGenerics {
     public static void main(String[] args) {
         ArrayList <Integer> l1 = new ArrayList<>();
         l1.add(1);
-        myGeneric <String, Integer> g1 = new myGeneric(34, "This is T1", 1);
+        myGeneric <String, Integer> g1 = new myGeneric<>(34, "This is T1", 1);
         String str = g1.getT1();
         int n = g1.getVal();
         int str2 = g1.getT2();
