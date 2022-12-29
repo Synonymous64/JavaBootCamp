@@ -5,7 +5,7 @@ public class DateAndTimeFormatter {
     public void dateAndTimeFormat(){
         LocalDateTime dt = LocalDateTime.now();
         System.out.println(dt);
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy - E");
         String date = dt.format(df);
         System.out.println(date);
     }
