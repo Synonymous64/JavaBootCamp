@@ -19,7 +19,7 @@ class myThread2 extends Thread{
 
 public class priorityThread {
     public static void main(String[] args) {
-        //* Ready queue : T1 T2 T3 T4 T5 ~ Thread ready to run from JVM (Responisbility)
+        //* Ready queue : T1 T2 T3 T4 T5 ~ Thread ready to run from JVM (Responsibility)
         // myThread1 t1 = new myThread1("Prajwal");
         // myThread2 t2 = new myThread2("Ayush");
         // t1.start();
